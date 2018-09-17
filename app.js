@@ -33,7 +33,7 @@ guessBtn.addEventListener('click', guessValue);
 
 function guessValue(){
     let guess = parseInt(guessInput.value);
-    console.log(Math.random()*(max-min+1)+min);
+    
     // Validate input
     if(guess === winningNum){
         gameOver(`${winningNum} is correct, you Won!`, 'green');
