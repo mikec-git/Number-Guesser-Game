@@ -32,12 +32,18 @@ function guessValue(){
     let guess = parseInt(guessInput.value);
     
     // Validate input
-    if(!isNaN(guess) && guess === winningNum){
-        setMessage('You have guessed the correct number!', 'green');
+    if(guess === winningNum){
+        setMessage(`${winningNum} is correct!`, 'green');
+        // Disable input
+        guessInput.disabled = true;
+        // Change border color
+        guessInput.style.borderColor = 'green';
     } else if(isNaN(guess) || guess < min || guess > max){
         setMessage(`Please enter a number between ${min} and ${max}.`, 'red');
+        guessInput.style.borderColor = 'red';
     } else{
         setMessage('You have guessed incorrectly.', 'red');
+        guessInput.style.borderColor = 'red';
     }
 }
 
