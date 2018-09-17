@@ -8,13 +8,13 @@ GAME FUNCTION:
 */
 
 // Game values
-let winningNum  = 2,
+let min         = 3,
+    max         = 10,
     guessesLeft = 3,
-    min         = 1,
-    max         = 10;
+    winningNum  = Math.floor(Math.random()*(max-min+1) + min);
 
 // UI Elements
-const   UIgame      = document.querySelector('#game'),
+const   game        = document.querySelector('#game'),
         minNum      = document.querySelector('.min-num'),
         maxNum      = document.querySelector('.max-num'),
         guessBtn    = document.querySelector('#guess-btn'),
@@ -25,29 +25,53 @@ const   UIgame      = document.querySelector('#game'),
 minNum.textContent = min;
 maxNum.textContent = max;
 
+// Play Again event listener
+game.addEventListener('mousedown', playAgain);
+
 // Listen for guess
 guessBtn.addEventListener('click', guessValue);
 
 function guessValue(){
     let guess = parseInt(guessInput.value);
-    
+    console.log(Math.random()*(max-min+1)+min);
     // Validate input
     if(guess === winningNum){
-        setMessage(`${winningNum} is correct!`, 'green');
-        // Disable input
-        guessInput.disabled = true;
-        // Change border color
-        guessInput.style.borderColor = 'green';
-    } else if(isNaN(guess) || guess < min || guess > max){
+        gameOver(`${winningNum} is correct, you Won!`, 'green');
+    } else if(isNaN(guess)){
         setMessage(`Please enter a number between ${min} and ${max}.`, 'red');
-        guessInput.style.borderColor = 'red';
     } else{
-        setMessage('You have guessed incorrectly.', 'red');
-        guessInput.style.borderColor = 'red';
+        wrongGuess();
+        if(guessesLeft === 0){
+            gameOver(`Game over. The correct answer was ${winningNum}.`, 'red');
+        } else{
+            setMessage(`You have guessed incorrectly. (${guessesLeft} guesses left)`, 'red');
+        }    
+    }
+}
+
+function playAgain(e){
+    if(e.target.className === 'play-again'){
+        window.location.reload();
     }
 }
 
 function setMessage(msg, color){
     message.textContent = msg;
     message.style.color = color;
+}
+
+function wrongGuess(){
+    guessesLeft--;
+    guessInput.value = '';
+    guessInput.style.borderColor = 'red';
+}
+
+function gameOver(message, color){
+    setMessage(message, color);
+    guessInput.disabled = true;
+    guessInput.style.borderColor = color;
+    
+    // Play Again
+    guessBtn.value = "Play Again";
+    guessBtn.className += 'play-again';
 }
